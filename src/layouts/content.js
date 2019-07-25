@@ -1,6 +1,15 @@
 import {Layout } from 'antd'
-import './index.css'
 const {Content } = Layout;
 export default  (props) => {
-  return <Content>Content</Content>
+  return (
+    <Content
+      style={{
+      background: '#fff',
+      padding: 24,
+      margin: 0,
+      minHeight: 280,
+    }}>
+      {props.content}
+    </Content>
+  )
 }
