@@ -4,49 +4,70 @@ import * as MM from 'dva/router'
 import {menu} from './menu.json'
 import NavLink from 'umi/navlink'
 import {connect} from 'dva'
+import {RouterContext} from './router-context'
+import {mapMenuPathToKey} from 'utils'
 const {Sider} = Layout
 const { SubMenu } = Menu
 const menuIcons = ["table", "message","setting"];
 class MySider extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      selectedKeys: ['00'],
+      openKeys: ['0']
+    }
+  }
+  componentDidMount() {
+    console.log('--- context:', this.context)
+  }
+
+  select = ({selectedKeys}) => {
+    const openKeys = [selectedKeys[0].slice(0,1)]
+    this.setState({
+      selectedKeys,
+      openKeys
+    })
   }
   render() {
-    console.log('MM:',MM)
-    console.log('props:', this.props)
+    const {selectedKeys,openKeys} = this.state
+    console.log('mapMenuPathToKey:', mapMenuPathToKey(menu))
     return (
-      <Sider width={200} style={{ background: '#fff' }}>
-        <Menu
-              mode="inline"
-              defaultSelectedKeys={['00']}
-              defaultOpenKeys={['0']}
-              style={{ height: '100%', borderRight: 0 }}
-            >
-              {
-                menu.map((menuItem, key) => {
-                  return (
-                    <SubMenu key={`${key}`} title={
-                      <span>
-                        <Icon type={menuIcons[key]}/>
-                        {menuItem.name}
-                      </span>
-                    }>
-                      {
-                        menuItem.children.map((child, childKey) => {
-                          return (
-                            <Menu.Item key={`${key}${childKey}`}>
-                              <NavLink to={child.link}>{child.name}</NavLink>
-                            </Menu.Item>
-                          )
-                        })
-                      }
-                    </SubMenu>
-                  )
-                })
-              }
-            </Menu>
-      </Sider>
+        <Sider width={200} style={{ background: '#fff' }}>
+          <Menu
+                mode="inline"
+                defaultSelectedKeys={selectedKeys}
+                defaultOpenKeys={openKeys}
+                style={{ height: '100%', borderRight: 0 }}
+                onSelect={this.select}
+              >
+                {
+                  menu.map((menuItem) => {
+                    const {key} = menuItem
+                    return (
+                      <SubMenu key={key} title={
+                        <span>
+                          <Icon type={menuIcons[key]}/>
+                          {menuItem.name}
+                        </span>
+                      }>
+                        {
+                          menuItem.children.map((child) => {
+                            const {key: childKey} = child
+                            return (
+                              <Menu.Item key={childKey}>
+                                <NavLink to={child.link}>{child.name}</NavLink>
+                              </Menu.Item>
+                            )
+                          })
+                        }
+                      </SubMenu>
+                    )
+                  })
+                }
+              </Menu>
+        </Sider>
       )
     } 
 }
+MySider.contextType = RouterContext
 export default  connect()(MySider)

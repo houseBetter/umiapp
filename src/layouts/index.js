@@ -4,23 +4,26 @@ import Header from './header'
 import Sider from './sider'
 import Footer from './footer'
 import Content from './content'
+import React from 'react'
+import {RouterContext} from './router-context'
 function BasicLayout(props) {
-  console.log('BasicLayout props:', props);
   return (
     <Layout className={styles.layout}>
-      <Header />
-      <Layout>
-        <Sider props={props}/>
-        <Layout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
-          <Content content={props.children} />
+      <RouterContext.Provider value={{routerProps: props}}>
+        <Header />
+        <Layout>
+          <Sider/>
+          <Layout style={{ padding: '0 24px 24px' }}>
+            <Breadcrumb style={{ margin: '16px 0' }}>
+              <Breadcrumb.Item>Home</Breadcrumb.Item>
+              <Breadcrumb.Item>List</Breadcrumb.Item>
+              <Breadcrumb.Item>App</Breadcrumb.Item>
+            </Breadcrumb>
+            <Content content={props.children} />
+          </Layout>
         </Layout>
-      </Layout>
-      <Footer />
+        <Footer />
+      </RouterContext.Provider>
     </Layout>
   );
 }

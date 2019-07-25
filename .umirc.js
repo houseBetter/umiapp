@@ -1,5 +1,6 @@
 
 // ref: https://umijs.org/config/
+import { resolve } from 'path';
 export default {
   treeShaking: true,
   plugins: [
@@ -22,4 +23,7 @@ export default {
       },
     }],
   ],
+  alias: {
+    utils: resolve(__dirname, './src/utils')
+  }
 }
